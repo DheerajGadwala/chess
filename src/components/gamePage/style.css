@@ -45,7 +45,7 @@
 }
 
 .square[colour="1"] {
-  background-color: rgb(49, 49, 49);
+  background-color: rgb(214, 214, 214);
 }
 
 .square[colour="0"] {
@@ -65,22 +65,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   cursor: grab;
 }
 
 .square[piece="1"]:hover {
-  box-shadow: inset 0px 0px 4px 3px rgb(39, 245, 125);
+  box-shadow: inset 0px 0px 5px 2px rgb(17, 161, 77);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .possibleMove {
-  box-shadow: inset 0px 0px 2px 3px rgb(245, 229, 8);
+  box-shadow: inset 0px 0px 5px 2px rgb(27, 86, 196);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .possibleMove.square[piece="1"] {
-  box-shadow: inset 0px 0px 2px 3px rgb(247, 59, 59);
+  box-shadow: inset 0px 0px 5px 2px rgb(155, 2, 2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.possibleMove.hovered {
+  box-shadow: inset 0px 0px 5px 2px rgb(175, 164, 0) !important;
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .invisible {
   display: none;
+}
+
+.disabled {
+  pointer-events: none;
 }

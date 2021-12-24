@@ -35,9 +35,9 @@ const GamePage = (props) => {
             element.addEventListener("dragend", onDragEnd);
         })
         squares.forEach(element => {
-            element.addEventListener("dragenter", unusedDropEvent);
+            element.addEventListener("dragenter", onDragEnter);
             element.addEventListener("dragover", unusedDropEvent);
-            element.addEventListener("dragleave", unusedDropEvent);
+            element.addEventListener("dragleave", onDragLeave);
             element.addEventListener("drop", onDrop);
         })
 
@@ -48,9 +48,9 @@ const GamePage = (props) => {
                 element.removeEventListener("dragend", onDragEnd);
             });
             squares.forEach(element => {
-                element.removeEventListener("dragenter", unusedDropEvent);
+                element.removeEventListener("dragenter", onDragEnter);
                 element.removeEventListener("dragover", unusedDropEvent);
-                element.removeEventListener("dragleave", unusedDropEvent);
+                element.removeEventListener("dragleave", onDragLeave);
                 element.removeEventListener("drop", onDrop);
             });
         }
@@ -62,6 +62,16 @@ const GamePage = (props) => {
 
     const unusedDropEvent = (e) => {
         e.preventDefault();
+    }
+
+    const onDragEnter = (e) => {
+        e.preventDefault();
+        e.target.classList.add('hovered');
+    }
+
+    const onDragLeave = (e) => {
+        e.preventDefault();
+        e.target.classList.remove('hovered');
     }
 
     const onDragStart = (e) => {
@@ -76,7 +86,13 @@ const GamePage = (props) => {
                 }
             });
         });
-        setTimeout(() => (element.className = "invisible", 0));
+        setTimeout(() => {
+            element.className = "invisible";
+            let fulls = document.querySelectorAll(".full");
+            fulls.forEach(full => {
+                full.classList.add('disabled');
+            });
+        }, 0);
     }
 
     const onDragEnd = (e) => {
@@ -90,8 +106,12 @@ const GamePage = (props) => {
                 }
             });
         });
-        dragged = null;
+        let disables = document.querySelectorAll(".disabled");
+        disables.forEach(disable => {
+            disable.classList.remove('disabled');
+        });
         e.target.className = "full"
+        dragged = null;
     }
 
     const onDrop = (e) => {
@@ -116,6 +136,11 @@ const GamePage = (props) => {
             dragged.className = "full";
             dragged = null;
         }
+        e.target.classList.remove('hovered');
+        let disables = document.querySelectorAll(".disabled");
+        disables.forEach(disable => {
+            disable.classList.remove('disabled');
+        });
     }
 
     const getPieceImage = (piece) => {
