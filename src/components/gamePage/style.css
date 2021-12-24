@@ -1,0 +1,86 @@
+.gamePageContainer {
+  min-width: 100vw;
+  min-height: 100vh;
+  width: fit-content;
+  background-color: rgb(165, 165, 165);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board {
+  width: min(80vw, 80vh);
+  height: min(80vw, 80vh);
+  margin: min(5vw, 5vh, 25px);
+  min-width: 442px;
+  min-height: 442px;
+  background-color: rgb(61, 55, 55);
+  display: flex;
+  flex-wrap: wrap;
+  box-shadow: 1px 1px 1px rgb(29, 29, 29);
+  box-shadow: 2px 2px 1px rgb(29, 29, 29);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.board:hover {
+  box-shadow: 1px 1px 1px rgb(29, 29, 29);
+  box-shadow: 2px 2px 1px rgb(29, 29, 29);
+  box-shadow: 3px 3px 1px rgb(29, 29, 29);
+  box-shadow: 4px 4px 1px rgb(29, 29, 29);
+  box-shadow: 5px 5px 1px rgb(29, 29, 29);
+  box-shadow: 6px 6px 1px rgb(29, 29, 29);
+  box-shadow: 7px 7px 1px rgb(29, 29, 29);
+  box-shadow: 8px 8px 1px rgb(29, 29, 29);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.square {
+  width: min(10vw, 10vh);
+  height: min(10vw, 10vh);
+  min-width: 55px;
+  min-height: 55px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.square[colour="1"] {
+  background-color: rgb(49, 49, 49);
+}
+
+.square[colour="0"] {
+  background-color: rgb(255, 255, 255);
+}
+
+.square img {
+  width: 80%;
+  height: 80%;
+  pointer-events: none;
+}
+
+.full {
+  width: 100%;
+  height: 100%;
+  opacity: 0.99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: grab;
+}
+
+.square[piece="1"]:hover {
+  box-shadow: inset 0px 0px 4px 3px rgb(39, 245, 125);
+}
+
+.possibleMove {
+  box-shadow: inset 0px 0px 2px 3px rgb(245, 229, 8);
+}
+
+.possibleMove.square[piece="1"] {
+  box-shadow: inset 0px 0px 2px 3px rgb(247, 59, 59);
+}
+
+.invisible {
+  display: none;
+}
