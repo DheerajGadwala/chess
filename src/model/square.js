@@ -5,6 +5,10 @@ class Square {
         this.piece = piece;
     }
 
+    getCopy = () => {
+        return new Square(this.color, this.piece === null ? null : this.piece.getCopy());
+    }
+
     isWhite = () => {
         return this.color === 0;
     }

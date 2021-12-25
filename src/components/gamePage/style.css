@@ -17,20 +17,20 @@
   background-color: rgb(61, 55, 55);
   display: flex;
   flex-wrap: wrap;
-  box-shadow: 1px 1px 1px rgb(29, 29, 29);
-  box-shadow: 2px 2px 1px rgb(29, 29, 29);
+  box-shadow: 1px 1px 1px rgb(66, 66, 66);
+  box-shadow: 2px 2px 1px rgb(66, 66, 66);
   transition: box-shadow 0.3s ease-in-out;
 }
 
 .board:hover {
-  box-shadow: 1px 1px 1px rgb(29, 29, 29);
-  box-shadow: 2px 2px 1px rgb(29, 29, 29);
-  box-shadow: 3px 3px 1px rgb(29, 29, 29);
-  box-shadow: 4px 4px 1px rgb(29, 29, 29);
-  box-shadow: 5px 5px 1px rgb(29, 29, 29);
-  box-shadow: 6px 6px 1px rgb(29, 29, 29);
-  box-shadow: 7px 7px 1px rgb(29, 29, 29);
-  box-shadow: 8px 8px 1px rgb(29, 29, 29);
+  box-shadow: 1px 1px 1px rgb(66, 66, 66);
+  box-shadow: 2px 2px 1px rgb(66, 66, 66);
+  box-shadow: 3px 3px 1px rgb(66, 66, 66);
+  box-shadow: 4px 4px 1px rgb(66, 66, 66);
+  box-shadow: 5px 5px 1px rgb(66, 66, 66);
+  box-shadow: 6px 6px 1px rgb(66, 66, 66);
+  box-shadow: 7px 7px 1px rgb(66, 66, 66);
+  box-shadow: 8px 8px 1px rgb(66, 66, 66);
   transition: box-shadow 0.3s ease-in-out;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .square[colour="1"] {
-  background-color: rgb(214, 214, 214);
+  background-color: rgb(207, 207, 207);
 }
 
 .square[colour="0"] {
@@ -65,27 +65,67 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: grab;
 }
 
-.square[piece="1"]:hover {
-  box-shadow: inset 0px 0px 5px 2px rgb(17, 161, 77);
+.turn.square[piece="1"]:hover,
+.turn.square[piece="1"].hovered {
+  box-shadow: inset 0px 0px 5px 2px rgb(177, 173, 119);
+  transition: box-shadow 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.turn.square[piece="1"].clicked {
+  box-shadow: inset 0px 0px 5px 2px rgb(177, 173, 119);
+  transition: box-shadow 0.5s ease-in-out;
+}
+
+.turn.square[piece="1"].clicked:hover,
+.turn.square[piece="1"].clicked.hovered {
+  box-shadow: inset 0px 0px 5px 4px rgb(177, 173, 119);
   transition: box-shadow 0.3s ease-in-out;
 }
 
 .possibleMove {
   box-shadow: inset 0px 0px 5px 2px rgb(27, 86, 196);
+  transition: box-shadow 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.possibleMove:hover,
+.possibleMove.hovered {
+  box-shadow: inset 0px 0px 5px 4px rgb(27, 86, 196);
   transition: box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.possibleMove.castleMove {
+  box-shadow: inset 0px 0px 5px 2px rgb(132, 255, 204);
+  transition: box-shadow 0.5s ease-in-out;
+  cursor: pointer;
+  content: "CASTLE";
+}
+
+.castleMove::before {
+  font-weight: bold;
+  color: rgb(0, 163, 95);
+  content: "CASTLE";
+}
+.possibleMove.castleMove:hover,
+.possibleMove.castleMove.hovered {
+  box-shadow: inset 0px 0px 5px 4px rgb(132, 255, 204);
+  transition: box-shadow 0.3s ease-in-out;
+  cursor: pointer;
 }
 
 .possibleMove.square[piece="1"] {
-  box-shadow: inset 0px 0px 5px 2px rgb(155, 2, 2);
-  transition: box-shadow 0.3s ease-in-out;
+  box-shadow: inset 0px 0px 5px 2px rgb(216, 2, 2);
+  transition: box-shadow 0.5s ease-in-out;
 }
 
-.possibleMove.hovered {
-  box-shadow: inset 0px 0px 5px 2px rgb(175, 164, 0) !important;
-  transition: box-shadow 0.3s ease-in-out;
+.possibleMove.square[piece="1"]:hover,
+.possibleMove.square[piece="1"].hovered {
+  box-shadow: inset 0px 0px 5px 4px rgb(216, 2, 2);
+  transition: box-shadow 0.5s ease-in-out;
 }
 
 .invisible {

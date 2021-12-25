@@ -24,6 +24,10 @@ class Piece {
         }
     }
 
+    getCopy = () => {
+        return new Piece(this.color, this.type);
+    }
+
     promote = () => {
         this.type = 4; //promote to queen
     }

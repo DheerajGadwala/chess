@@ -3,28 +3,36 @@ import Square from './square.js'
 
 class Game {
 
-    constructor() {
-        this.turn = 0;
-        this.board = [];
-        for(var i = 0; i < 8; i++) {
-            let col = [];
-            for (var j = 0; j < 8; j++) {
-                let piece = null;
-                if (i == 0) {
-                    piece = new Piece(1, j + 1);
+    constructor(turn, board, deadPieces) {
+        if (turn !== null && board !== null && deadPieces !== null) {
+            this.turn = turn;
+            this.board = board;
+            this.deadPieces = deadPieces;
+        }
+        else {
+            this.turn = 0;
+            this.board = [];
+            this.deadPieces = [];
+            for(var i = 0; i < 8; i++) {
+                let col = [];
+                for (var j = 0; j < 8; j++) {
+                    let piece = null;
+                    if (i == 0) {
+                        piece = new Piece(1, j + 1);
+                    }
+                    else if (i == 1) {
+                        piece = new Piece(1, 0);
+                    }
+                    else if (i == 6) {
+                        piece = new Piece(0, 0);
+                    }
+                    else if (i == 7) {
+                        piece = new Piece(0, j + 1);
+                    }
+                    col.push(new Square((i + j) % 2, piece));
                 }
-                else if (i == 1) {
-                    piece = new Piece(1, 0);
-                }
-                else if (i == 6) {
-                    piece = new Piece(0, 0);
-                }
-                else if (i == 7) {
-                    piece = new Piece(0, j + 1);
-                }
-                col.push(new Square((i + j) % 2, piece));
+                this.board.push(col);
             }
-            this.board.push(col);
         }
     }
 
@@ -44,12 +52,12 @@ class Game {
         return this.isOnBoard(row, col) && this.board[row][col].getPiece() === null;
     }
 
-    underCheck = () => {
+    underCheck = (color) => {
         let kingPos = null;
-        for (let i = 0; i <= 8; i++) {
-            for (let j = 0; j <= 8; j++) {
-                let piece = this.board[i][j];
-                if (piece !== null && piece.isKing() && piece.color == this.turn) {
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                let piece = this.board[i][j].getPiece();
+                if (piece !== null && piece.isKing() && piece.color == color) {
                     kingPos = [i, j];
                     break;
                 }
@@ -58,28 +66,82 @@ class Game {
                 break;
             }
         }
-        for (let i = 0; i <= 8; i++) {
-            for (let j = 0; j <= 8; j++) {
-                let piece = this.board[i][j];
-                if (piece !== null && piece.color !== this.turn) {
-                    let moves = this.getValidMoves(i, j);
+        let danger = false;
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                let piece = this.board[i][j].getPiece();
+                if (piece !== null && piece.color !== color) {
+                    let moves = this.#getValidMovesHelper(i, j);
                     moves.forEach(move => {
                         if (move[0] == kingPos[0] && move[1] == kingPos[1]) {
-                            return true;
+                            danger = true;
                         }
                     })
                 }
             }
         }
-        return false;
+        return danger;
+    }
+
+    getDeadPieces = () => {
+        return this.deadPieces;
+    }
+
+    copyGame = () => {
+        let boardCopy = [];
+        for(var i = 0; i < 8; i++) {
+            let col = [];
+            for (var j = 0; j < 8; j++) {
+                col.push(this.board[i][j].getCopy());
+            }
+            boardCopy.push(col);
+        }
+        let deadPiecesCopy = [];
+        this.deadPieces.forEach(deadPiece => {
+            deadPiecesCopy.push(deadPiece.getCopy());
+        });
+        return new Game(this.turn, boardCopy, deadPiecesCopy);
     }
 
     getValidMoves = (row, col) => {
+        if (this.board[row][col].getPiece().color !== this.turn) {
+            return [];
+        }
+        else if (this.underCheck(this.turn)) {
+            let allMoves = this.#getValidMovesHelper(row, col);
+            let legalMoves = [];
+            allMoves.forEach(move => {
+                let gameCopy = this.copyGame();
+                gameCopy.#forceMove(row, col, move[0], move[1]);
+                if (!gameCopy.underCheck(this.turn)) {
+                    legalMoves.push(move);
+                }
+            });
+            if (this.board[row][col].getPiece().isKing()) {
+                legalMoves = legalMoves.concat(this.getCastleMoves());
+            }
+            return legalMoves;
+        }
+        else {
+            let allMoves = this.#getValidMovesHelper(row, col);
+            let legalMoves = [];
+            allMoves.forEach(move => {
+                let gameCopy = this.copyGame();
+                gameCopy.#forceMove(row, col, move[0], move[1]);
+                if (!gameCopy.underCheck(this.turn)) {
+                    legalMoves.push(move);
+                }
+            });
+            if (this.board[row][col].getPiece().isKing()) {
+                legalMoves = legalMoves.concat(this.getCastleMoves());
+            }
+            return legalMoves;
+        }
+    } 
+
+    #getValidMovesHelper = (row, col) => {
         let moves = [];
         let piece = this.board[row][col].getPiece();
-        if (piece.color !== this.turn) {
-            return moves;
-        }
         if (piece.isRook() || piece.isQueen()) {
             for(let i = 1; i < 8; i++) {
                 if(this.isNotOccupied(row, col + i)) {
@@ -285,22 +347,141 @@ class Game {
         return moves;
     }
 
+    #isThreathened = (row, col) => {
+        let danger = false;
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                let piece = this.board[i][j].getPiece();
+                if (piece !== null && piece.color !== this.turn) {
+                    let moves = this.#getValidMovesHelper(i, j);
+                    moves.forEach(move => {
+                        if (move[0] == row && move[1] == col) {
+                            danger = true;
+                        }
+                    })
+                }
+            }
+        }
+        return danger;
+    }
+
+    getCastleMoves = () => {
+        let possibilities = this.isCastlePossible();
+        let moves = []
+        let kPos = 4;
+        let side = this.turn === 0 ? 7 : 0;
+        if (possibilities[0]) {
+            moves.push([side, kPos - 2, 1]);
+        }
+        if (possibilities[1]) {
+            moves.push([side, kPos + 2, 1]);
+        }
+        return moves;
+    } 
+
+    isCastlePossible = () => {
+        let kPos = 4;
+        let lRook = 0;
+        let rRook = 7;
+        let side = this.turn === 0 ? 7 : 0;
+        let lr = this.board[side][lRook].getPiece();
+        let rr = this.board[side][rRook].getPiece();
+        let k = this.board[side][kPos].getPiece();
+        if (k !== null && k.isKing() && k.moveCount == 0) {
+            // check left 
+            // Check for threaths in the king's path.
+            let leftPossibility = !this.#isThreathened(side, kPos) && !this.#isThreathened(side, kPos - 1) && !this.#isThreathened(side, kPos-2);
+            // Check if path is clear.
+            leftPossibility = leftPossibility && this.board[side][kPos-1].getPiece() === null && this.board[side][kPos-2].getPiece() === null && this.board[side][kPos-3].getPiece() === null;
+            // Check if rook is at the position and not moved yet.
+            leftPossibility = leftPossibility && lr !== null && lr.isRook() && lr.moveCount === 0;
+            // check right
+            // Check for threaths in the king's path.
+            let rightPossibility = !this.#isThreathened(side, kPos) && !this.#isThreathened(side, kPos + 1) && !this.#isThreathened(side, kPos + 2);
+            // Check if path is clear.
+            rightPossibility = rightPossibility && this.board[side][kPos+1].getPiece() === null && this.board[side][kPos+2].getPiece() === null;
+            // Check if rook is at the position and not moved yet.
+            rightPossibility = rightPossibility && rr !== null && rr.isRook() && rr.moveCount === 0;
+
+            return [leftPossibility, rightPossibility];
+        }
+        return [false, false];
+    }
+
     move = (rowf, colf, rowt, colt) => {
         let validMoves = this.getValidMoves(rowf, colf);
-        validMoves.forEach(move => {
-            if (move[0] == rowt && move[1] == colt) {
-                this.board[rowf][colf].getPiece().moveCount++;
-                this.board[rowt][colt].setPiece(this.board[rowf][colf].getPiece());
-                this.board[rowf][colf].removePiece();
-                if (this.board[rowt][colt].getPiece().isPawn()) {
-                    if (rowt == 0 || rowt == 7) {
-                        this.board[rowt][colt].getPiece().promote();
+        let moved = false;
+        // Special Case: Castling
+        if (this.board[rowf][colf].getPiece().isKing()) {
+            let castleMoves = this.getCastleMoves();
+            castleMoves.forEach(move => {
+                if (move[0] == rowt && move[1] == colt) {
+                    this.board[rowt][colt].setPiece(this.board[rowf][colf].getPiece());
+                    this.board[rowf][colf].removePiece();
+                    if (colt == 6) {
+                        this.board[rowt][5].setPiece(this.board[rowf][7].getPiece());
+                        this.board[rowf][7].removePiece();
+                    }
+                    else {
+                        this.board[rowt][3].setPiece(this.board[rowf][0].getPiece());
+                        this.board[rowf][0].removePiece();
+                    }
+                    this.turn = this.turn == 0 ? 1 : 0;
+                    moved = true;
+                }
+            });
+        }
+        if (!moved) {
+            validMoves.forEach(move => {
+                if (move[0] == rowt && move[1] == colt) {
+                    this.board[rowf][colf].getPiece().moveCount++;
+                    if (this.board[rowt][colt].getPiece() !== null) {
+                        this.deadPieces.push(this.board[rowt][colt].getPiece());
+                    }
+                    this.board[rowt][colt].setPiece(this.board[rowf][colf].getPiece());
+                    this.board[rowf][colf].removePiece();
+                    if (this.board[rowt][colt].getPiece().isPawn()) {
+                        if (rowt == 0 || rowt == 7) {
+                            this.board[rowt][colt].getPiece().promote();
+                        }
+                    }
+                    this.turn = this.turn == 0 ? 1 : 0;
+                    moved = true;
+                }
+            });
+        }
+        return moved;
+    }
+    
+    #forceMove = (rowf, colf, rowt, colt) => {
+        this.board[rowf][colf].getPiece().moveCount++;
+        if (this.board[rowt][colt].getPiece() !== null) {
+            this.deadPieces.push(this.board[rowt][colt].getPiece());
+        }
+        this.board[rowt][colt].setPiece(this.board[rowf][colf].getPiece());
+        this.board[rowf][colf].removePiece();
+        if (this.board[rowt][colt].getPiece().isPawn()) {
+            if (rowt == 0 || rowt == 7) {
+                this.board[rowt][colt].getPiece().promote();
+            }
+        }
+        this.turn = this.turn == 0 ? 1 : 0;
+    }
+
+    isGameOver = () => {
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                let piece = this.board[i][j].getPiece();
+                if (piece !== null && piece.color === this.turn) {
+                    let moves = this.getValidMoves(i, j);
+                    if (moves.length > 0) {
+                        return false;
                     }
                 }
-                this.turn = this.turn == 0 ? 1 : 0;
             }
-        })
-    } 
+        }
+        return true;
+    }
     
 }
 
