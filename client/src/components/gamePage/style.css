@@ -13,7 +13,7 @@
   height: min(80vw, 80vh);
   margin: min(5vw, 5vh, 25px);
   min-width: 442px;
-  min-height: 442px;
+  min-height: 440px;
   background-color: rgb(61, 55, 55);
   display: flex;
   flex-wrap: wrap;
