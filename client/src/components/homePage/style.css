@@ -127,7 +127,7 @@
 
 .overlay .button {
   color: rgb(190, 190, 190);
-  min-width: 100px;
+  min-width: min(20vw, 100px);
   margin: 0 1vw 0 1vw;
 }
 
