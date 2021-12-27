@@ -5,6 +5,7 @@ const HomePage = (props) => {
 
     const [screen, setScreen] = useState("home");
     const [joinGameBox, shownJoinGameBox] = useState(false);
+    const [code, setCode] = useState("");
 
     useEffect(() => {
         const setPagePVPS = () => {props.setPage("gamePage_PVPS")}
@@ -13,12 +14,14 @@ const HomePage = (props) => {
         const onBackClick = () => {setScreen("home")}
         const onHostClick = () => {
             setScreen("wait");
-            props.socket.emit('host', (response) => {console.log(response)});
+            props.socket.emit('host', (response) => {
+                setCode(response.gameId);
+            });
         }
         const onJoinClick = () => {
             props.socket.emit('join', document.getElementById("gameId").value, (response) => {
-                if (response.status === "connected") {
-                    // TODO
+                if (response.status !== "connected") {
+                    alert("Please enter a valid code");
                 }
             });
         }
@@ -67,7 +70,7 @@ const HomePage = (props) => {
             <div className = {"button" + (screen === "differentDevices" ? "" : " disableDisplay")} id = "host">Host Game</div>
             <div className = {"button" + (screen === "differentDevices" ? "" : " disableDisplay")} id = "join" onClick = {()=>{shownJoinGameBox(true);}}>Join Game</div>
             <div className = {"button" + (screen === "differentDevices" ? "" : " disableDisplay")} id = "back">Back</div>
-            <div className = {"hostText" + (screen === "wait" ? "" : " disableDisplay")}>Waiting for a player to join</div>
+            <div className = {"hostText" + (screen === "wait" ? "" : " disableDisplay")}>Share this code with the other player: {code}</div>
         </div>
         </div>
         </>

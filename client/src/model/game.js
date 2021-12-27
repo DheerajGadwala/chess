@@ -18,22 +18,43 @@ class Game {
                 for (var j = 0; j < 8; j++) {
                     let piece = null;
                     if (i == 0) {
-                        piece = new Piece(1, j + 1);
+                        piece = new Piece(1, j + 1, 0);
                     }
                     else if (i == 1) {
-                        piece = new Piece(1, 0);
+                        piece = new Piece(1, 0, 0);
                     }
                     else if (i == 6) {
-                        piece = new Piece(0, 0);
+                        piece = new Piece(0, 0, 0);
                     }
                     else if (i == 7) {
-                        piece = new Piece(0, j + 1);
+                        piece = new Piece(0, j + 1, 0);
                     }
                     col.push(new Square((i + j) % 2, piece));
                 }
                 this.board.push(col);
             }
         }
+    }
+
+    static getObject = (turn, board, deadPieces) => {
+        let turnC = turn;
+        let boardC = [];
+        let deadPiecesC = [];
+        for(var i = 0; i < 8; i++) {
+            let col = [];
+            for (var j = 0; j < 8; j++) {
+                let piece = null;
+                if (board[i][j].piece !== null) {
+                    piece = new Piece(board[i][j].piece.color, board[i][j].piece.type, board[i][j].piece.moveCount);
+                }
+                col.push(new Square((i + j) % 2, piece));
+            }
+            boardC.push(col);
+        }
+        for(let i = 0; i < deadPieces.length; i++) {
+            deadPiecesC.push(new Piece(deadPieces[i].color, deadPieces[i].type, deadPieces[i].moveCount));
+        }
+        return new Game(turnC, boardC, deadPiecesC);
     }
 
     getBoard = () => {

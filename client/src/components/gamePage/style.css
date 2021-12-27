@@ -13,8 +13,6 @@
   width: min(80vw, 80vh);
   height: min(80vw, 80vh);
   margin: min(5vw, 5vh, 25px);
-  min-width: 442px;
-  min-height: 440px;
   background-color: rgb(61, 55, 55);
   display: flex;
   flex-wrap: wrap;
@@ -38,8 +36,6 @@
 .square {
   width: min(10vw, 10vh);
   height: min(10vw, 10vh);
-  min-width: 55px;
-  min-height: 55px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -103,13 +99,13 @@
   box-shadow: inset 0px 0px 5px 2px rgb(132, 255, 204);
   transition: box-shadow 0.5s ease-in-out;
   cursor: pointer;
-  content: "CASTLE";
 }
 
 .castleMove::before {
   font-weight: bold;
   color: rgb(0, 163, 95);
   content: "CASTLE";
+  font-size: min(2.25vw, 2.25vh);
 }
 .possibleMove.castleMove:hover,
 .possibleMove.castleMove.hovered {

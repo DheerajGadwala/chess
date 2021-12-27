@@ -17,14 +17,16 @@ import whiteKing from '../../img/whiteKing.png';
 
 const GamePage = (props) => {
 
+    const [gameId, setGameId] = useState(null);
     const [game, setGame] = useState(null);
     const [board, setBoard] = useState([]);
+    const [player, setPlayer] = useState(null);
     let dragged = null;
     let clicked = null;
 
     useEffect(() => {
         //if (game === null) {
-            let g = new Game(null, null, null)
+            let g = new Game(null, null, null);
             setGame(g);
             setBoard([...g.getBoard()]);
         //}
@@ -67,12 +69,59 @@ const GamePage = (props) => {
         }
     }, [board]);
 
+    useEffect(()=>{
+        if(props.socket !== null) {
+          props.socket.on('connected', (response)=>{
+            let gTemp = Game.getObject(response.game.turn, response.game.board, response.game.deadPieces);
+            setGameId(response.gameId);
+            setGame(gTemp);
+            setPlayer(response.color);
+            props.setPage("gamePage_PVPD");
+          });
+          props.socket.on('moveUpdate', (response)=>{
+            let gTemp = Game.getObject(response.game.turn, response.game.board, response.game.deadPieces);
+            setGame(gTemp);
+            setBoard([...gTemp.getBoard()]);
+            clicked = null;
+            dragged = null;
+            let disables = document.querySelectorAll(".disabled");
+            disables.forEach(disable => {
+                disable.classList.remove('disabled');
+            });
+          });
+        }
+
+      }, [props.socket]);
+
     const move = (rowFrom, colFrom, rowTo, colTo) => {
         if (props.page === 'gamePage_PVPS') {
             return game.move(rowFrom, colFrom, rowTo, colTo);
         }
         else if (props.page === 'gamePage_PVPD') {
+            if (game.move(rowFrom, colFrom, rowTo, colTo)) {
+                props.socket.emit('move', gameId, rowFrom, colFrom, rowTo, colTo);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else if (props.page === 'gamePage_PVC') {
 
+        }
+    }
+
+    const getValidMoves = (row, col) => {
+        if (props.page === 'gamePage_PVPS') {
+            return game.getValidMoves(row, col);
+        }
+        else if (props.page === 'gamePage_PVPD') {
+            if ((player === "white" && game.turn === 0) || (player === "black" && game.turn === 1)) {
+                return game.getValidMoves(row, col);
+            }
+            else {
+                return [];
+            }
         }
         else if (props.page === 'gamePage_PVC') {
 
@@ -94,7 +143,7 @@ const GamePage = (props) => {
     }
 
     const addPossibleMoves = (target, fromClick) => {
-        let moves = game.getValidMoves(parseInt(target.getAttribute('row')), parseInt(target.getAttribute('col')));
+        let moves = getValidMoves(parseInt(target.getAttribute('row')), parseInt(target.getAttribute('col')));
         let squares = document.querySelectorAll(".square");
         squares.forEach(square => {
             moves.forEach(move => {
@@ -115,7 +164,7 @@ const GamePage = (props) => {
     }
 
     const removePossibleMoves = (target, fromClick) => {
-        let moves = game.getValidMoves(parseInt(target.getAttribute('row')), parseInt(target.getAttribute('col')));
+        let moves = getValidMoves(parseInt(target.getAttribute('row')), parseInt(target.getAttribute('col')));
         let squares = document.querySelectorAll(".square");
         squares.forEach(square => {
             moves.forEach(move => {
@@ -271,6 +320,19 @@ const GamePage = (props) => {
     }
 
 
+    const highLightOnHover = (piece) => {
+        if (props.page === 'gamePage_PVPS') {
+            return piece !== null && piece.color === game.turn;
+        }
+        else if (props.page === 'gamePage_PVPD') {
+            let playerColor = player === "white" ? 0 : 1;
+            return piece !== null && piece.color === game.turn && piece.color === playerColor;
+        }
+        else if (props.page === 'gamePage_PVC') {
+
+        }
+    }
+
     return(
         <div className = {"gamePageContainer" + (props.page !== "homePage" ? "" : " disableDisplay")} draggable = "false">
             <div className = "button" id = "back" onClick = {()=>{props.setPage("homePage")}}>BACK [Progress will be lost forever]</div>
@@ -284,7 +346,7 @@ const GamePage = (props) => {
                                 for (let n = 0; n < 8; n++) {
                                     let square = board[m][n];
                                     squares.push(
-                                        <div key = {id} className = {"square " + (square.getPiece() !== null && game.turn == square.getPiece().color ? "turn": "")} 
+                                        <div key = {id} className = {"square " + (highLightOnHover(square.getPiece()) ? "turn": "")} 
                                         colour = {square.isBlack() ? 1 : 0} draggable = "false" piece = {square.getPiece() !== null ? 1 : 0} row = {m} col = {n}>
                                             {
                                             square.getPiece() !== null ?

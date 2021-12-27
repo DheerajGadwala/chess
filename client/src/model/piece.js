@@ -1,7 +1,7 @@
 class Piece {
 
-    constructor(color, type){
-        this.moveCount = 0;
+    constructor(color, type, moveCount){
+        this.moveCount = moveCount;
         this.color = color;
         this.type = type;
         if (type == 0) {

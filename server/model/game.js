@@ -405,7 +405,10 @@ class Game {
         return [false, false];
     }
 
-    move = (rowf, colf, rowt, colt) => {
+    move = (rowf, colf, rowt, colt, player) => {
+        if (player !== this.turn) {
+            return false;
+        }
         let validMoves = this.getValidMoves(rowf, colf);
         let moved = false;
         // Special Case: Castling
