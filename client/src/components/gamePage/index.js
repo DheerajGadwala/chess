@@ -17,14 +17,21 @@ import whiteKing from '../../img/whiteKing.png';
 
 const GamePage = (props) => {
 
-    const [game, setGame] = useState(new Game(null, null, null));
+    const [game, setGame] = useState(null);
     const [board, setBoard] = useState([]);
     let dragged = null;
     let clicked = null;
 
     useEffect(() => {
-        setBoard([...game.getBoard()]);
-    }, []);
+        //if (game === null) {
+            let g = new Game(null, null, null)
+            setGame(g);
+            setBoard([...g.getBoard()]);
+        //}
+        // else {
+        //     setBoard([...game.getBoard()]);
+        // }
+    }, [props]);
 
     useEffect(() => {
         let fulls = document.querySelectorAll(".full");
@@ -59,6 +66,18 @@ const GamePage = (props) => {
             });
         }
     }, [board]);
+
+    const move = (rowFrom, colFrom, rowTo, colTo) => {
+        if (props.page === 'gamePage_PVPS') {
+            return game.move(rowFrom, colFrom, rowTo, colTo);
+        }
+        else if (props.page === 'gamePage_PVPD') {
+
+        }
+        else if (props.page === 'gamePage_PVC') {
+
+        }
+    }
 
     const unusedDropEvent = (e) => {
         e.preventDefault();
@@ -140,7 +159,7 @@ const GamePage = (props) => {
             disables.forEach(disable => {
                 disable.classList.remove('disabled');
             });
-            let flag = game.move(
+            let flag = move(
                 parseInt(clicked.getAttribute('row')),
                 parseInt(clicked.getAttribute('col')),
                 parseInt(element.getAttribute('row')), 
@@ -188,7 +207,7 @@ const GamePage = (props) => {
         if (dragged !== null) {
             let element = e.target;
             removePossibleMoves(dragged, false);
-            game.move(
+            move(
                 parseInt(dragged.getAttribute('row')),
                 parseInt(dragged.getAttribute('col')),
                 parseInt(element.getAttribute('row')), 
@@ -253,7 +272,8 @@ const GamePage = (props) => {
 
 
     return(
-        <div className = "gamePageContainer" draggable = "false">
+        <div className = {"gamePageContainer" + (props.page !== "homePage" ? "" : " disableDisplay")} draggable = "false">
+            <div className = "button" id = "back" onClick = {()=>{props.setPage("homePage")}}>BACK [Progress will be lost forever]</div>
             <div className = "board" draggable = "false">
                 {
                     (() => {

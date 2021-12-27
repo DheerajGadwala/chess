@@ -4,12 +4,15 @@
 /client/node_modules
 /client/.pnp
 /client.pnp.js
-
+/server/node_modules
 # testing
 /client/coverage
 
 # production
 /client/build
+/server/build
+
+/server/.git
 
 # misc
 .DS_Store

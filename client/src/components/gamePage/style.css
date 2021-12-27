@@ -4,6 +4,7 @@
   width: fit-content;
   background-color: rgb(165, 165, 165);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -45,7 +46,7 @@
 }
 
 .square[colour="1"] {
-  background-color: rgb(207, 207, 207);
+  background-color: rgb(173, 173, 173);
 }
 
 .square[colour="0"] {

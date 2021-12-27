@@ -1,0 +1,156 @@
+.homeContainer {
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(114, 114, 114);
+}
+
+.options {
+  min-width: 300px;
+  min-height: 400px;
+  width: 70vw;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.button {
+  color: rgb(206, 206, 206);
+  background-color: black;
+  padding: 3vh 3vw 3vh 3vw;
+  min-width: 200px;
+  text-align: center;
+  box-shadow: 0px 0px 5px rgb(196, 196, 196);
+  transform: scale(1);
+  transition: all 0.3s ease-in-out;
+  user-select: none;
+  border-radius: 5px;
+}
+
+.disableDisplay {
+  display: none !important;
+}
+
+.button:hover {
+  color: rgb(255, 255, 255);
+  background-color: rgb(41, 41, 41);
+  cursor: pointer;
+  box-shadow: 0px 0px 15px rgb(196, 196, 196);
+  transform: scale(1.04);
+  transition: all 0.3s ease-in-out;
+}
+
+.button:active {
+  transform: scale(1);
+  transition: all 0.05s ease-in-out;
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: antiquewhite;
+  padding: 2vh;
+  border-radius: 5px;
+  width: min(100%, 440px);
+  height: 20%;
+  user-select: none;
+  box-shadow: 0px 0px 5px rgb(32, 32, 32);
+  transition: all 0.3s ease-in-out;
+}
+
+.titleContainer:hover {
+  box-shadow: 0px 0px 15px rgb(32, 32, 32);
+  transform: scale(1.04);
+  transition: all 0.3s ease-in-out;
+}
+
+.title {
+  font-size: max(30px, 3vh);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+  color: rgb(77, 77, 77);
+}
+
+.author {
+  all: unset;
+  cursor: pointer;
+  font-size: max(16px, 2vh);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-style: italic;
+  color: rgb(173, 70, 70);
+}
+
+.author:hover {
+  color: rgb(0, 0, 0);
+}
+
+.overlay {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 2;
+  height: min(40%, 400px);
+  width: min(50%, 400px);
+  padding: max(24px, 2vw);
+  background-color: rgb(165, 155, 141);
+  border-radius: 5px;
+  box-shadow: 6px 6px 0px rgba(58, 56, 56, 0.8);
+  transition: all 0.5s ease-in-out;
+}
+
+.overlay:hover {
+  box-shadow: 10px 10px 0px rgba(58, 56, 56, 0.8);
+  transition: all 0.5s ease-in-out;
+}
+
+.overlay .overlayTitle {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: rgb(44, 44, 44);
+}
+
+.overlay .overlayButtons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.overlay .button {
+  color: rgb(190, 190, 190);
+  min-width: 100px;
+  margin: 0 1vw 0 1vw;
+}
+
+.overlay input {
+  font-size: 18px;
+  color: rgb(24, 24, 24);
+  padding: 2.5vh 2.5vw 2.5vh 2.5vw;
+  min-width: 200px;
+  text-align: center;
+  font-family: inherit;
+  width: 90%;
+  border: 0;
+  border-bottom: 2px solid rgb(65, 65, 65);
+  box-shadow: 0 1px 0 rgb(83, 83, 83);
+  outline: 0;
+  font-size: 1.3rem;
+  color: rgb(49, 49, 49);
+  padding: 7px 0;
+  background: transparent;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.overlay input:focus {
+  box-shadow: 0 3px 0 rgb(83, 83, 83);
+  transition: box-shadow 0.2s ease-in-out;
+}
