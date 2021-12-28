@@ -39,10 +39,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-shadow: inset 0px 0px 5px 1px rgb(0, 0, 0);
+}
+
+.rotate180 {
+  transform: rotateX(180deg);
 }
 
 .square[colour="1"] {
-  background-color: rgb(173, 173, 173);
+  background-color: rgb(133, 115, 115);
 }
 
 .square[colour="0"] {

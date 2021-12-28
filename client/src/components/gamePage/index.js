@@ -336,7 +336,7 @@ const GamePage = (props) => {
     return(
         <div className = {"gamePageContainer" + (props.page !== "homePage" ? "" : " disableDisplay")} draggable = "false">
             <div className = "button" id = "back" onClick = {()=>{props.setPage("homePage")}}>BACK [Progress will be lost forever]</div>
-            <div className = "board" draggable = "false">
+            <div className = {"board " + (player === "black" ? "rotate180 " : "")} draggable = "false">
                 {
                     (() => {
                         let id = 0;
@@ -346,7 +346,7 @@ const GamePage = (props) => {
                                 for (let n = 0; n < 8; n++) {
                                     let square = board[m][n];
                                     squares.push(
-                                        <div key = {id} className = {"square " + (highLightOnHover(square.getPiece()) ? "turn": "")} 
+                                        <div key = {id} className = {"square " + (highLightOnHover(square.getPiece()) ? "turn ": "") + (player === "black" ? "rotate180 " : "")} 
                                         colour = {square.isBlack() ? 1 : 0} draggable = "false" piece = {square.getPiece() !== null ? 1 : 0} row = {m} col = {n}>
                                             {
                                             square.getPiece() !== null ?
