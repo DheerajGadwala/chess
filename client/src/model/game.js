@@ -3,16 +3,18 @@ import Square from './square.js'
 
 class Game {
 
-    constructor(turn, board, deadPieces) {
-        if (turn !== null && board !== null && deadPieces !== null) {
+    constructor(turn, board, deadPieces, movesWithoutKills) {
+        if (turn !== null && board !== null && deadPieces !== null && movesWithoutKills !== null) {
             this.turn = turn;
             this.board = board;
             this.deadPieces = deadPieces;
+            this.movesWithoutKills = movesWithoutKills;
         }
         else {
             this.turn = 0;
             this.board = [];
             this.deadPieces = [];
+            this.movesWithoutKills = 0; 
             for(var i = 0; i < 8; i++) {
                 let col = [];
                 for (var j = 0; j < 8; j++) {
@@ -36,8 +38,9 @@ class Game {
         }
     }
 
-    static getObject = (turn, board, deadPieces) => {
+    static getObject = (turn, board, deadPieces, movesWithoutKills) => {
         let turnC = turn;
+        let movesWithoutKillsC = movesWithoutKills;
         let boardC = [];
         let deadPiecesC = [];
         for(var i = 0; i < 8; i++) {
@@ -54,7 +57,7 @@ class Game {
         for(let i = 0; i < deadPieces.length; i++) {
             deadPiecesC.push(new Piece(deadPieces[i].color, deadPieces[i].type, deadPieces[i].moveCount));
         }
-        return new Game(turnC, boardC, deadPiecesC);
+        return new Game(turnC, boardC, deadPiecesC, movesWithoutKillsC);
     }
 
     getBoard = () => {
@@ -487,6 +490,10 @@ class Game {
             }
         }
         this.turn = this.turn == 0 ? 1 : 0;
+    }
+
+    isDraw = () => {
+
     }
 
     isGameOver = () => {

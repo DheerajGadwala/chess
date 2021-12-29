@@ -10,7 +10,6 @@ const HomePage = (props) => {
     useEffect(() => {
         const setPagePVPS = () => {props.setPage("gamePage_PVPS")}
         const setPagePVPD = () => {setScreen("differentDevices")}
-        const setPagePVC = () => {alert("To be implemented")}
         const onBackClick = () => {setScreen("home")}
         const onHostClick = () => {
             setScreen("wait");
@@ -28,7 +27,6 @@ const HomePage = (props) => {
 
         document.getElementById("pvpS").addEventListener('click', setPagePVPS);
         document.getElementById("pvpD").addEventListener('click', setPagePVPD);
-        document.getElementById("pvc").addEventListener('click', setPagePVC);
         document.getElementById("host").addEventListener('click', onHostClick);
         document.getElementById("back").addEventListener('click', onBackClick);
         document.getElementById("joinGame").addEventListener('click', onJoinClick);
@@ -36,7 +34,6 @@ const HomePage = (props) => {
         return () => {
             document.getElementById("pvpS").removeEventListener('click', setPagePVPS);
             document.getElementById("pvpD").removeEventListener('click', setPagePVPD);
-            document.getElementById("pvc").removeEventListener('click', setPagePVC);
             document.getElementById("host").removeEventListener('click', onHostClick);
             document.getElementById("back").removeEventListener('click', onBackClick);
             document.getElementById("joinGame").removeEventListener('click', onJoinClick);
@@ -66,11 +63,10 @@ const HomePage = (props) => {
             </div>
             <div className = {"button" + (screen === "home" ? "" : " disableDisplay")} id = "pvpS">Player vs Player, Same Device</div>
             <div className = {"button" + (screen === "home" ? "" : " disableDisplay")} id = "pvpD">Player vs Player, Different Device</div>
-            <div className = {"button" + (screen === "home" ? "" : " disableDisplay")} id = "pvc">Player vs Computer</div>
             <div className = {"button" + (screen === "differentDevices" ? "" : " disableDisplay")} id = "host">Host Game</div>
             <div className = {"button" + (screen === "differentDevices" ? "" : " disableDisplay")} id = "join" onClick = {()=>{shownJoinGameBox(true);}}>Join Game</div>
-            <div className = {"button" + (screen === "differentDevices" ? "" : " disableDisplay")} id = "back">Back</div>
             <div className = {"hostText" + (screen === "wait" ? "" : " disableDisplay")}>Share this code with the other player: {code}</div>
+            <div className = {"button" + (screen === "differentDevices" || screen === "wait" ? "" : " disableDisplay")} id = "back">Back</div>
         </div>
         </div>
         </>
