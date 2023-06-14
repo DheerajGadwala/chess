@@ -13,12 +13,14 @@ const HomePage = (props) => {
         const onBackClick = () => {setScreen("home")}
         const onHostClick = () => {
             setScreen("wait");
-            props.socket.emit('host', (response) => {
+            props.socket.emit('host', {}, (response) => {
+                console.log(response)
                 setCode(response.gameId);
             });
         }
         const onJoinClick = () => {
             props.socket.emit('join', document.getElementById("gameId").value, (response) => {
+                console.log(response);
                 if (response.status !== "connected") {
                     alert("Please enter a valid code");
                 }
