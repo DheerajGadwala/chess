@@ -10,7 +10,8 @@ function App() {
   const [page, setPage] = useState('homePage');
 
   useEffect(()=>{
-    setSocket(io("https://floating-atoll-84889.herokuapp.com/"));
+    // setSocket(io("https://floating-atoll-84889.herokuapp.com/"));
+    setSocket(io("http://127.0.0.1:5000"));
   }, []);
 
   return (
