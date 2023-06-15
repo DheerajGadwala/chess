@@ -22,6 +22,55 @@ class Game:
                         piece = Piece(0, j + 1)
                     col.append(Square((i + j) % 2, piece))
                 self.board.append(col)
+    
+    def __init__(self, fenString="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq"):
+        fenString = fenString.split(" ")
+        b = fenString[0]
+        self.turn = 0 if fenString[1] == 'w' else 1
+        self.board = []
+        self.deadPieces = []
+        b = b.split("/")
+        p = 0
+        for row in b:
+            col = []
+            q = 0
+            for i in row:
+                piece = None
+                if i == 'r':
+                    piece = Piece(1, 1)
+                elif i == 'n':
+                    piece = Piece(1, 2)
+                elif i == 'p':
+                    piece = Piece(1, 0)
+                elif i == 'b':
+                    piece = Piece(1, 3)
+                elif i == 'q':
+                    piece = Piece(1, 4)
+                elif i == 'k':
+                    piece = Piece(1, 5)
+                elif i == 'R':
+                    piece = Piece(0, 1)
+                elif i == 'N':
+                    piece = Piece(0, 2)
+                elif i == 'P':
+                    piece = Piece(0, 0)
+                elif i == 'B':
+                    piece = Piece(0, 3)
+                elif i == 'Q':
+                    piece = Piece(0, 4)
+                elif i == 'K':
+                    piece = Piece(0, 5)
+                else:
+                    x = int(i)
+                    for j in range(x):
+                        col.append(Square((p + q) % 2, piece))
+                        q += 1
+                    continue
+                col.append(Square((p + q) % 2, piece))
+                q += 1
+            p += 1
+            self.board.append(col)
+        castles = "" if len(fenString) < 3 else fenString[2]
 
     def getBoard(self):
         return self.board
@@ -246,6 +295,25 @@ class Game:
             moves.append([side, kPos + 2, 1])
         return moves
 
+    def isCastleAvailable(self):
+        kPos = 4
+        lRook = 0
+        rRook = 7
+        LR = self.board[0][lRook].getPiece()
+        RR = self.board[0][rRook].getPiece()
+        K = self.board[0][kPos].getPiece()
+        lr = self.board[7][lRook].getPiece()
+        rr = self.board[7][rRook].getPiece()
+        k = self.board[7][kPos].getPiece()
+        kGood = k is not None and k.isKing() and k.moveCount == 0
+        KGood = K is not None and K.isKing() and K.moveCount == 0
+        lp = kGood and lr is not None and lr.isRook() and lr.moveCount == 0
+        rp = kGood and rr is not None and rr.isRook() and rr.moveCount == 0
+        LP = KGood and LR is not None and LR.isRook() and LR.moveCount == 0
+        RP = KGood and RR is not None and RR.isRook() and RR.moveCount == 0
+        return [lp, rp, LP, RP]
+        
+
     def isCastlePossible(self):
         kPos = 4
         lRook = 0
@@ -334,6 +402,41 @@ class Game:
                         return False
         return True
 
+    # Fen String for opening board position => board turn castles
+    # "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq"
+    def generateFenString(self):
+        ret = ""
+        for row in self.board:
+            emt = 0
+            for sq in row:
+                p = sq.getPiece()
+                if p is None:
+                    emt += 1
+                elif emt == 0:
+                    ret += p.getFenSymbol()
+                else:
+                    ret += str(emt)
+                    emt = 0
+                    ret += p.getFenSymbol()
+            if emt != 0:
+                ret += str(emt)
+            ret += '/'
+        ret = ret[:-1]
+        ret += " " + ('w' if self.turn == 0 else 'b')
+        castlesPossible = self.isCastleAvailable()
+        castles = ""
+        if castlesPossible[0]:
+            castles += "K"
+        if castlesPossible[1]:
+            castles += "Q"
+        if castlesPossible[2]:
+            castles += 'k'
+        if castlesPossible[3]:
+            castles += 'q'
+        if len(castles) > 0:
+            ret += " " + castles
+        return ret
+
     def getJson(self):
         return {"turn": self.turn, "board": [[i.getJson() for i in j] for j in self.board], "deadPieces":[i.getJson() for i in self.deadPieces]}
 
@@ -354,6 +457,24 @@ class Piece:
             self.type = 4  # queen
         elif type == 5:
             self.type = 5  # king
+
+    def getFenSymbol(self):
+        ret = ''
+        if self.isPawn():
+            ret = 'p'
+        elif self.isKnight():
+            ret = 'n'
+        elif self.isRook():
+            ret = 'r'
+        elif self.isBishop():
+            ret = 'b'
+        elif self.isQueen():
+            ret = 'q'
+        else:
+            ret = 'k'
+        if self.isWhite():
+            ret = ret.upper()
+        return ret
 
     def getCopy(self):
         return Piece(self.color, self.type)

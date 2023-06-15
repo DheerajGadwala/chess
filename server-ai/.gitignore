@@ -1,2 +1,5 @@
 /lib/
 /bin/
+/data.npz
+/data1.npz
+/data2.npz

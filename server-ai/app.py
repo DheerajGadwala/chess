@@ -2,51 +2,8 @@ from flask import Flask, request
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from Game import Game
+from AllGames import AllGames
 import random
-
-class AllGames:
-
-    def __init__(self):
-        self.mapWhite = dict()
-        self.mapBlack = dict()
-        self.mapGame = dict()
-        self.whiteId = dict()
-        self.blackId = dict()
-        self.mapSocketId = dict()
-
-    def setGameWhite(self, gameId, socket, id):
-        self.mapWhite[gameId] = socket
-        self.whiteId[gameId] = id
-        self.mapSocketId[socket] = id
-
-    def setGameBlack(self, gameId, socket, id):
-        self.mapBlack[gameId] = socket
-        self.blackId[gameId] = id
-        self.mapSocketId[socket] = id
-
-    def setGame(self, gameId, game):
-        self.mapGame[gameId] = game
-
-    def getWhiteSocket(self, gameId):
-        return self.mapWhite[gameId]
-    
-    def getWhiteId(self, gameId):
-        return self.whiteId[gameId]
-    
-    def getBlackSocket(self, gameId):
-        return self.mapBlack[gameId]
-    
-    def getBlackId(self, gameId):
-        return self.blackId[gameId]
-    
-    def getIdBySocket(self, socket):
-        return self.mapSocketId[socket]
-    
-    def getGame(self, gameId):
-        return self.mapGame[gameId]
-    
-    def has(self, gameId):
-        return gameId in self.mapWhite
 
 app = Flask(__name__)
 CORS(app)
