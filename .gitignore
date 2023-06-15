@@ -18,7 +18,6 @@
 /server-ai/data.npz
 /server-ai/data1.npz
 /server-ai/data2.npz
-/server-ai/stockfish
 
 # misc
 .DS_Store
