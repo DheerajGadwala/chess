@@ -21,7 +21,8 @@ def random_board(max_depth=200):
 
 # Will be used by the tensorflow model to evaluate the board position
 def stockfish(board, depth):
-    with chess.engine.SimpleEngine.popen_uci('stockfish/15.1/bin/stockfish') as sf:
+    #with chess.engine.SimpleEngine.popen_uci('stockfish/15.1/bin/stockfish') as sf:
+    with chess.engine.SimpleEngine.popen_uci('stockfish_13_linux_x64/stockfish_13_linux_x64') as sf:
         result = sf.analyse(board, chess.engine.Limit(depth=depth))
         score = result['score'].white().score()
         return score
