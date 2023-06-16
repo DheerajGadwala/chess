@@ -1,4 +1,5 @@
 chess==1.9.4
+requests==2.31.0
 absl-py==1.4.0
 astunparse==1.6.3
 bidict==0.22.1
