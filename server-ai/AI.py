@@ -122,8 +122,9 @@ def makeMove(game):
     board = chess.Board(game.generateFenString())
     best_move = get_ai_move(board)
     board.push(best_move)
-    # print(board.fen())
+    print(board.fen())
     return Game.createGame(board.fen())
 
     
-    
+game = Game()
+game = makeMove(game)
