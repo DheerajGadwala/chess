@@ -23,12 +23,13 @@ class Game:
                     col.append(Square((i + j) % 2, piece))
                 self.board.append(col)
     
-    def __init__(self, fenString="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq"):
+    def createGame(fenString="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq"):
         fenString = fenString.split(" ")
         b = fenString[0]
-        self.turn = 0 if fenString[1] == 'w' else 1
-        self.board = []
-        self.deadPieces = []
+        game = Game()
+        game.turn = 0 if fenString[1] == 'w' else 1
+        game.board = []
+        game.deadPieces = []
         b = b.split("/")
         p = 0
         for row in b:
@@ -69,8 +70,9 @@ class Game:
                 col.append(Square((p + q) % 2, piece))
                 q += 1
             p += 1
-            self.board.append(col)
+            game.board.append(col)
         castles = "" if len(fenString) < 3 else fenString[2]
+        return game
 
     def getBoard(self):
         return self.board

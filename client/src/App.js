@@ -8,6 +8,8 @@ function App() {
 
   const [socket, setSocket] = useState(null);
   const [page, setPage] = useState('homePage');
+  const [playerColor, setPlayerColor] = useState('white');
+  const [vsC, setVSC] = useState(false);
 
   useEffect(()=>{
     // setSocket(io("https://floating-atoll-84889.herokuapp.com/"));
@@ -20,11 +22,18 @@ function App() {
       page = {page}
       setPage={setPage}
       socket = {socket}
+      playerColor = {playerColor}
+      setPlayerColor = {setPlayerColor}
+      setVSC = {setVSC}
     />
     <GamePage
       page = {page}
       setPage = {setPage}
       socket = {socket}
+      playerColor = {playerColor}
+      setPlayerColor = {setPlayerColor}
+      vsC = {vsC}
+      setVSC = {setVSC}
     />
       {/* {
         (()=>{

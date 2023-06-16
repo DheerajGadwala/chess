@@ -74,7 +74,11 @@ const GamePage = (props) => {
     }, [board]);
 
     useEffect(()=>{
-        if(props.socket !== null) {
+        setPlayer(props.playerColor);
+    }, [props.playerColor]);
+
+    useEffect(()=>{
+        if(playSound != null && props.socket !== null) {
           props.socket.on('connected', (response)=>{
             let gTemp = Game.getObject(response.game.turn, response.game.board, response.game.deadPieces);
             setGameId(response.gameId);
@@ -89,9 +93,17 @@ const GamePage = (props) => {
             resetCSS();
             playSound();
           });
+          props.socket.on('connected_ai', (response)=>{
+            let gTemp = Game.getObject(response.game.turn, response.game.board, response.game.deadPieces);
+            setGameId(response.gameId);
+            setGame(gTemp);
+            setBoard([...gTemp.getBoard()]);
+            setPlayer(response.color);
+            props.setPage("gamePage_PVPD");
+          });
         }
 
-      }, [props.socket]);
+      }, [props.socket, playSound]);
 
     const resetCSS = () => {
         clicked = null;
@@ -351,13 +363,15 @@ const GamePage = (props) => {
 
     return(
         <div className = {"gamePageContainer" + (props.page !== "homePage" ? "" : " disableDisplay")} draggable = "false">
-            <div className = "button" id = "back" onClick = {()=>{props.setPage("homePage")}}>BACK [Progress will be lost forever]</div>
+            <div className = "button" id = "back" onClick = {()=>{props.setPage("homePage"); props.setVSC(false);}}>BACK [Progress will be lost forever]</div>
             <div className = "infoBoard" id = "back">
                 {
                     (()=> {
+                        const you = props.playerColor === "white" ? 0 : 1;
+                        const vsc = props.vsC ? " [Computer]" : "";
                         if (game !== null) {
                             if (!game.isGameOver()) {
-                                return ("TURN: " + (game.turn === 0 ? "WHITE" : "BLACK")) 
+                                return ("TURN: " + (game.turn === 0 ? "WHITE" : "BLACK") + (game.turn === you ? " [You]" : vsc)) 
                                 +
                                 (game.underCheck(game.turn) ? " [Check]" : "")
                             }

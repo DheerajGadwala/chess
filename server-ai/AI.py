@@ -106,16 +106,24 @@ def minimax(board, depth, alpha, beta, maximizing_player):
 
 
 # this is the actual function that gets the move from the neural network
-def get_ai_move(board, depth):
-    max_move = None
-    max_eval = -numpy.inf
-
+def get_ai_move(board, depth=3):
+    moves = []
     for move in board.legal_moves:
         board.push(move)
         eval = minimax(board, depth - 1, -numpy.inf, numpy.inf, False)
         board.pop()
-        if eval > max_eval:
-            max_eval = eval
-            max_move = move
+        moves.append([move, eval])
+    moves.sort(key = lambda x: -x[1])
+    choice = random.choices([i[0] for i in moves[:3]], weights=[i[1]**2 for i in moves[:3]], k=1)[0]
+    return choice
+
+def makeMove(game):
+    # print(game.generateFenString())
+    board = chess.Board(game.generateFenString())
+    best_move = get_ai_move(board)
+    board.push(best_move)
+    # print(board.fen())
+    return Game.createGame(board.fen())
+
     
-    return max_move
+    
